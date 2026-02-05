@@ -44,11 +44,12 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 
-    std::atomic<float> cutoffHz {1000.0f};
-    std::atomic<float> resonance {0.707f};
+    juce::AudioProcessorValueTreeState apvts;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
     LowPassFilter leftFilter;
     LowPassFilter rightFilter;
+
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 };

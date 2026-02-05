@@ -19,7 +19,7 @@ void Biquad::reset() {
 }
 
 float Biquad::process(const float x) {
-    const float y = (b0) * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
+    const float y = b0 * x + b1 * x1 + b2 * x2 - a1 * y1 - a2 * y2;
 
     x2 = x1;
     x1 = x;

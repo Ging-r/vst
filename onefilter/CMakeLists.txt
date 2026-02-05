@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.24)
+cmake_minimum_required(VERSION 4.0.2)
 
 # Change to your project name
 project(onefilter VERSION 0.0.1)
@@ -10,8 +10,9 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 # We're going to use CPM as our package manager to bring in JUCE
 # Check to see if we have CPM installed already.  Bring it in if we don't.
-set(CPM_DOWNLOAD_VERSION 0.34.0)
+set(CPM_DOWNLOAD_VERSION 0.42.1)
 set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
+
 
 if (NOT EXISTS ${CPM_DOWNLOAD_LOCATION})
     message(STATUS "Downloading CPM.cmake to ${CPM_DOWNLOAD_LOCATION}")
@@ -26,6 +27,12 @@ CPMAddPackage(
     GIT_REPOSITORY https://github.com/juce-framework/JUCE.git
     GIT_TAG origin/master
 )
+CPMAddPackage(
+  NAME Catch2
+  GITHUB_REPOSITORY catchorg/Catch2
+  VERSION 3.5.3
+)
+
 
 # Make sure you include any new source files here
 set(SourceFiles
@@ -33,11 +40,16 @@ set(SourceFiles
         src/plugin/PluginEditor.h
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginProcessor.h
+        src/dsp/LowPassFilter.h
+        src/dsp/LowPassFilter.cpp
+        src/dsp/Biquad.h
+        src/dsp/Biquad.cpp
+        src/core/Parameters.h
 )
 
 # Change these to your own preferences
 juce_add_plugin(${PROJECT_NAME}
-        COMPANY_NAME theaudioprogrammer
+        COMPANY_NAME gngr
         IS_SYNTH FALSE
         NEEDS_MIDI_INPUT FALSE
         NEEDS_MIDI_OUTPUT FALSE
@@ -48,7 +60,7 @@ juce_add_plugin(${PROJECT_NAME}
         PLUGIN_MANUFACTURER_CODE Tap1
         PLUGIN_CODE Reg0
         FORMATS VST3 AU Standalone
-        PRODUCT_NAME "TapPluginTemplate"        
+        PRODUCT_NAME "onefilter"        
 )
 
 # How we want our SourceFiles to appear in our IDE
@@ -88,8 +100,13 @@ add_executable(filter_tests
     src/dsp/LowPassFilter.cpp
     src/dsp/Biquad.cpp
 )
+target_link_libraries(filter_tests
+    PRIVATE
+        Catch2::Catch2WithMain
+)
 
 target_include_directories(filter_tests PRIVATE
     src
-    external/catch2
 )
+
+

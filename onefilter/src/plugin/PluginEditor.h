@@ -16,7 +16,15 @@ public:
 private:
     // This reference is provided as a quick way for your editor to
     // access the processor object that created it.
-    AudioPluginAudioProcessor& processorRef;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
+    juce::Slider cutoffSlider;
+    juce::Slider qualitySlider;
+
+    using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
+
+    std::unique_ptr<SliderAttachment> cutoffAttachment;
+    std::unique_ptr<SliderAttachment> qualityAttachment;
+
+    AudioPluginAudioProcessor& processorRef;
 };
