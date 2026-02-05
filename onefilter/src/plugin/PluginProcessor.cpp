@@ -43,6 +43,18 @@ const juce::String AudioPluginAudioProcessor::getName() const {
     return JucePlugin_Name;
 }
 
+bool AudioPluginAudioProcessor::isMidiEffect() const {
+    return false;
+}
+bool AudioPluginAudioProcessor::acceptsMidi() const {
+    return false;
+}
+bool AudioPluginAudioProcessor::producesMidi() const {
+    return false;
+}
+
+
+
 
 double AudioPluginAudioProcessor::getTailLengthSeconds() const {
     return 0.0;

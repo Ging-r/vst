@@ -1,0 +1,60 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"cmake-build-debug/_deps/juce-src/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 160,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "Unspecified",
+			"destination" : "lib/cmake/JUCE-8.0.12",
+			"paths" : 
+			[
+				"cmake-build-debug/_deps/juce-build/JUCEConfigVersion.cmake",
+				"cmake-build-debug/_deps/juce-build/JUCEConfig.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/JUCECheckAtomic.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/JUCEHelperTargets.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/JUCEModuleSupport.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/JUCEUtils.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/JuceLV2Defines.h.in",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/LaunchScreen.storyboard",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/PIPAudioProcessor.cpp.in",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/PIPAudioProcessorWithARA.cpp.in",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/PIPComponent.cpp.in",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/PIPConsole.cpp.in",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/RecentFilesMenuTemplate.nib",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/UnityPluginGUIScript.cs.in",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/checkBundleSigning.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/copyDir.cmake",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/juce_runtime_arch_detection.cpp",
+				"cmake-build-debug/_deps/juce-src/extras/Build/CMake/juce_LinuxSubprocessHelper.cpp"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "_deps/juce-build",
+		"source" : "cmake-build-debug/_deps/juce-src"
+	}
+}
