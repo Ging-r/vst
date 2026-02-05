@@ -50,6 +50,9 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+onefilter/cmake-build-debug
+parametric/cmake-build-debug
+
 
 # debug information files
 *.dwo
