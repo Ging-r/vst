@@ -6,13 +6,12 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
     : AudioProcessor(BusesProperties()
 #if ! JucePlugin_IsMidiEffect
 #if ! JucePlugin_IsSynth
-        .withInput("Input", juce::AudioChannelSet::stereo(), true)
+          .withInput("Input", juce::AudioChannelSet::stereo(), true)
 #endif
-        .withOutput("Output", juce::AudioChannelSet::stereo(), true)
+          .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
-    ),
-    apvts(*this, nullptr, "Parameters", createParameterLayout())
-{
+      ),
+      apvts(*this, nullptr, "Parameters", createParameterLayout()) {
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor() {
@@ -24,7 +23,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         "CUTOFF",
         "Cutoff Freq",
-        juce::NormalisableRange<float>(20.0f, 20000,1.0f, 0.5f),
+        juce::NormalisableRange<float>(20.0f, 20000, 1.0f, 0.5f),
         1000.0f
     ));
 
@@ -44,37 +43,13 @@ const juce::String AudioPluginAudioProcessor::getName() const {
     return JucePlugin_Name;
 }
 
-bool AudioPluginAudioProcessor::acceptsMidi() const {
-#if JucePlugin_WantsMidiInput
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool AudioPluginAudioProcessor::producesMidi() const {
-#if JucePlugin_ProducesMidiOutput
-    return true;
-#else
-    return false;
-#endif
-}
-
-bool AudioPluginAudioProcessor::isMidiEffect() const {
-#if JucePlugin_IsMidiEffect
-    return true;
-#else
-    return false;
-#endif
-}
 
 double AudioPluginAudioProcessor::getTailLengthSeconds() const {
     return 0.0;
 }
 
 int AudioPluginAudioProcessor::getNumPrograms() {
-    return 1; // NB: some hosts don't cope very well if you tell them there are 0 programs,
-    // so this should be at least 1, even if you're not really implementing programs.
+    return 1;
 }
 
 int AudioPluginAudioProcessor::getCurrentProgram() {
@@ -172,16 +147,17 @@ juce::AudioProcessorEditor *AudioPluginAudioProcessor::createEditor() {
 
 //==============================================================================
 void AudioPluginAudioProcessor::getStateInformation(juce::MemoryBlock &destData) {
-    // You should use this method to store your parameters in the memory block.
-    // You could do that either as raw data, or use the XML or ValueTree classes
-    // as intermediaries to make it easy to save and load complex data.
-    juce::ignoreUnused(destData);
+    auto state = apvts.copyState();
+    std::unique_ptr<juce::XmlElement> xml(state.createXml());
+    copyXmlToBinary(*xml, destData);
 }
 
 void AudioPluginAudioProcessor::setStateInformation(const void *data, int sizeInBytes) {
-    // You should use this method to restore your parameters from this memory block,
-    // whose contents will have been created by the getStateInformation() call.
-    juce::ignoreUnused(data, sizeInBytes);
+    if (const std::unique_ptr<juce::XmlElement> xmlState(getXmlFromBinary(data, sizeInBytes)); xmlState != nullptr) {
+        if (xmlState->hasTagName(apvts.state.getType())) {
+            apvts.replaceState(juce::ValueTree::fromXml(*xmlState));
+        }
+    }
 }
 
 //==============================================================================
