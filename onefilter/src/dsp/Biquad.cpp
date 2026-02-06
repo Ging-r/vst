@@ -2,7 +2,6 @@
 // Created by Viktor Lindström on 2026-02-05.
 //
 #include "Biquad.h"
-#include <cmath>
 
 void Biquad::setCoefficients(const float b0_, const float b1_, const float b2_,
                              const float a0_, const float a1_, const float a2_) {
@@ -24,11 +23,8 @@ float Biquad::process(float x) {
 
     const float y = b0 * x + s1;
 
-    const float feedback = std::tanh(y);
-
-
-    s1 = s2 + b1 * x - a1 * feedback;
-    s2 =      b2 * x - a2 * feedback;
+    s1 = s2 + b1 * x - a1 * y;
+    s2 =      b2 * x - a2 * y;
 
     return y;
 }

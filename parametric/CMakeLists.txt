@@ -12,6 +12,7 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # Check to see if we have CPM installed already.  Bring it in if we don't.
 set(CPM_DOWNLOAD_VERSION 0.42.1)
 set(CPM_DOWNLOAD_LOCATION "${CMAKE_BINARY_DIR}/cmake/CPM_${CPM_DOWNLOAD_VERSION}.cmake")
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 
 if (NOT EXISTS ${CPM_DOWNLOAD_LOCATION})

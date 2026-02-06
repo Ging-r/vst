@@ -17,10 +17,14 @@ public:
 
 private:
     void updateCoefficients();
+    float smoothQ(float newValue);
+    float smoothC(float newValue);
 
     float fs{};
     float f0{1000.0f};
     float quality{0.707f};
 
+    float oldf0{1000.0f};
+    float oldQuality{0.707f};
     Biquad biquad;
 };

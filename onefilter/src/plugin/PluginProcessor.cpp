@@ -23,12 +23,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         "CUTOFF",
         "Cutoff Freq",
-        juce::NormalisableRange<float>(20.0f, 20000, 1.0f, 0.5f),
+        juce::NormalisableRange<float>(20.0f, 20000.0f, 0.1f, 0.5f),
         1000.0f
     ));
 
-    auto qRange = juce::NormalisableRange<float>(0.01f, 5.0f, 0.01f);
-    qRange.setSkewForCentre(0.707f); // Sets 0.707 to be exactly at 12 o'clock
+    auto qRange = juce::NormalisableRange<float>(0.01f, 30.0f, 0.001f);
+    qRange.setSkewForCentre(0.707f);
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         "QUALITY",
@@ -83,15 +83,11 @@ void AudioPluginAudioProcessor::changeProgramName(int index, const juce::String 
 
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
-    // Use this method as the place to do any pre-playback
-    // initialisation that you need.
     leftFilter.prepare(static_cast<float>(sampleRate));
     rightFilter.prepare(static_cast<float>(sampleRate));
 }
 
 void AudioPluginAudioProcessor::releaseResources() {
-    // When playback stops, you can use this as an opportunity to free up any
-    // spare memory, etc.
 }
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layouts) const {
@@ -99,15 +95,10 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layout
     juce::ignoreUnused(layouts);
     return true;
 #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
-    // Some plugin hosts, such as certain GarageBand versions, will only
-    // load plugins that support stereo bus layouts.
     if (layouts.getMainOutputChannelSet() != juce::AudioChannelSet::mono()
         && layouts.getMainOutputChannelSet() != juce::AudioChannelSet::stereo())
         return false;
 
-    // This checks if the input layout matches the output layout
 #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
         return false;
@@ -117,24 +108,31 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layout
 #endif
 }
 
+float oldQ = 0.0f;
+float oldCutOff = 0.0f;
 void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
                                              juce::MidiBuffer &midiMessages) {
     juce::ignoreUnused(midiMessages);
 
     juce::ScopedNoDenormals noDenormals;
+
     auto totalNumInputChannels = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
 
-    float newCutoffHz = *apvts.getRawParameterValue("CUTOFF");
+    float newCutoff = *apvts.getRawParameterValue("CUTOFF");
     float newQ = *apvts.getRawParameterValue("QUALITY");
 
+    //if(std::abs(oldCutOff-newCutoff)<0.01f){
+        leftFilter.setCutoff(newCutoff);
+        rightFilter.setCutoff(newCutoff);
+        oldCutOff = newCutoff;
 
-    leftFilter.setCutoff(newCutoffHz);
-    rightFilter.setCutoff(newCutoffHz);
-
-    leftFilter.setResonance(newQ);
-    leftFilter.setResonance(newQ);
-
+    //}
+    //if(std::abs(oldQ-newQ)<0.01f){
+        leftFilter.setResonance(newQ);
+        rightFilter.setResonance(newQ);
+        oldQ = newQ;
+    //}
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear(i, 0, buffer.getNumSamples());
 
@@ -150,7 +148,7 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
 
 //==============================================================================
 bool AudioPluginAudioProcessor::hasEditor() const {
-    return true; // (change this to false if you choose to not supply an editor)
+    return true;
 }
 
 juce::AudioProcessorEditor *AudioPluginAudioProcessor::createEditor() {

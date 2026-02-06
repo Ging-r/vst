@@ -8,7 +8,6 @@ class Biquad {
 public:
     void setCoefficients(float b0_, float b1_, float b2_,
                          float a0_, float a1_, float a2_);
-
     float process(float x);
 
     void reset();
