@@ -18,9 +18,11 @@ private:
     // access the processor object that created it.
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessorEditor)
-    juce::Slider cutoffSlider;
-    juce::Slider qualitySlider;
+    juce::Slider lowcutoffSlider;
+    juce::Slider lowqualitySlider;
 
+    juce::Slider highcutoffSlider;
+    juce::Slider highqualitySlider;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
     std::unique_ptr<SliderAttachment> cutoffAttachment;

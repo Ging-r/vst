@@ -7,25 +7,25 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 {
     juce::ignoreUnused (processorRef);
 
-    cutoffSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    cutoffSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-    addAndMakeVisible(cutoffSlider);
+    lowcutoffSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    lowcutoffSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(lowcutoffSlider);
 
-    qualitySlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    qualitySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
-    addAndMakeVisible(qualitySlider);
+    lowqualitySlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    lowqualitySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(lowqualitySlider);
 
 
     cutoffAttachment = std::make_unique<SliderAttachment>(
        processorRef.apvts,
        "CUTOFF",
-       cutoffSlider
+       lowcutoffSlider
        );
 
     qualityAttachment = std::make_unique<SliderAttachment>(
         processorRef.apvts,
         "QUALITY",
-        qualitySlider
+        lowqualitySlider
         );
 
     // Make sure that before the constructor has finished, you've set the
@@ -46,6 +46,6 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    cutoffSlider.setBounds(50,80,100,120);
-    qualitySlider.setBounds(200,80,100,120);
+    lowcutoffSlider.setBounds(50,80,100,120);
+    lowqualitySlider.setBounds(200,80,100,120);
 }

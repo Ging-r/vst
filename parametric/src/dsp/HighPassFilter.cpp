@@ -7,8 +7,8 @@
 class HighPassFilter final : public Filter {
     void updateCoefficients() override {
 
-        const float w0 = 2 * static_cast<float>(M_PI) * f0 / fs;
-        const float alpha = std::sin(w0) / (2 * quality);
+        const float w0 = 2 * static_cast<float>(M_PI) * oldf0 / fs;
+        const float alpha = std::sin(w0) / (2 * oldQuality);
 
         const float b0 = (1 + std::cos(w0)) / 2;
         const float b1 = -(1 + std::cos(w0));

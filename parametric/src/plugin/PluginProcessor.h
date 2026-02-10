@@ -1,7 +1,9 @@
 #pragma once
 
 #include <juce_audio_processors/juce_audio_processors.h>
-#include "../dsp/LowPassFilter.h"
+#include "../dsp/LowPassFilter.cpp"
+#include "../dsp/HighPassFilter.cpp"
+#include "../dsp/BellFilter.cpp"
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -44,12 +46,28 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 
+    void setLowPassFilter(LowPassFilter filter, float cutoff, float q);
+    void setHighPassFilter(HighPassFilter filter, float cutoff, float q);
+    void setBellFilter(BellFilter filter, float freq, float q, float gain);
+
     juce::AudioProcessorValueTreeState apvts;
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)
-    LowPassFilter leftFilter;
-    LowPassFilter rightFilter;
+    LowPassFilter leftLPF;
+    LowPassFilter rightLPF;
+
+    HighPassFilter leftHPFilter;
+    HighPassFilter rightHPFilter;
+
+    BellFilter leftBellFilter1;
+    BellFilter rightBellFilter1;
+
+    BellFilter leftBellFilter2;
+    BellFilter rightBellFilter2;
+
+    BellFilter leftBellFilter3;
+    BellFilter rightBellFilter3;
 
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();
 };

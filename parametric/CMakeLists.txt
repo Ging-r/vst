@@ -45,7 +45,6 @@ set(SourceFiles
         src/dsp/LowPassFilter.cpp
         src/dsp/Biquad.h
         src/dsp/Biquad.cpp
-        src/core/Parameters.h
 )
 
 # Change these to your own preferences
