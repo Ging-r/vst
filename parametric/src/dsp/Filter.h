@@ -59,7 +59,7 @@ public:
 
     virtual ~Filter() = default;
 protected:
-    virtual void updateCoefficients();
+    virtual void updateCoefficients() = 0;
 
     float fs{};
     float f0{};

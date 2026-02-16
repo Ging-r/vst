@@ -25,8 +25,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     layout.add(std::make_unique<juce::AudioParameterFloat>(
         "LOWPASSCUTOFF",
         "Cutoff Freq",
-        juce::NormalisableRange<float>(20.0f, 20000, 1.0f, 0.5f),
-        1000.0f
+        juce::NormalisableRange<float>(20.0f, 21000, 1.0f, 0.5f),
+        20000.0f
     ));
 
     auto lowQRange = juce::NormalisableRange<float>(0.01f, 5.0f, 0.01f);
@@ -43,7 +43,7 @@ layout.add(std::make_unique<juce::AudioParameterFloat>(
         "HIGHPASSCUTOFF",
         "Cutoff Freq",
         juce::NormalisableRange<float>(20.0f, 20000, 1.0f, 0.5f),
-        1000.0f
+        22.0f
     ));
 
     auto highQRange = juce::NormalisableRange<float>(0.01f, 5.0f, 0.01f);

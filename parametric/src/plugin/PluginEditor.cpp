@@ -12,25 +12,78 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     addAndMakeVisible(lowcutoffSlider);
 
     lowqualitySlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
-    lowqualitySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    lowqualitySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false,50,20);
     addAndMakeVisible(lowqualitySlider);
 
+    highcutoffSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    highcutoffSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(highcutoffSlider);
 
-    cutoffAttachment = std::make_unique<SliderAttachment>(
+    highqualitySlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    highqualitySlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(highqualitySlider);
+
+    bellfreqSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    bellfreqSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(bellfreqSlider);
+
+    bellqSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    bellqSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(bellqSlider);
+
+    bellGainSlider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
+    bellGainSlider.setTextBoxStyle(juce::Slider::TextBoxBelow, false, 50, 20);
+    addAndMakeVisible(bellGainSlider);
+
+
+
+
+    lowcutoffAttachment = std::make_unique<SliderAttachment>(
        processorRef.apvts,
-       "CUTOFF",
+       "LOWPASSCUTOFF",
        lowcutoffSlider
        );
 
-    qualityAttachment = std::make_unique<SliderAttachment>(
+    lowqualityAttachment = std::make_unique<SliderAttachment>(
         processorRef.apvts,
-        "QUALITY",
+        "LOWPASSQUALITY",
         lowqualitySlider
         );
+    highcutoffAttachment = std::make_unique<SliderAttachment>(
+       processorRef.apvts,
+       "HIGHPASSCUTOFF",
+       highcutoffSlider
+       );
+
+    highqualityAttachment = std::make_unique<SliderAttachment>(
+        processorRef.apvts,
+        "HIGHPASSQUALITY",
+        highqualitySlider
+        );
+
+     bellfreqAttachment = std::make_unique<SliderAttachment>(
+        processorRef.apvts,
+        "BELL1CUTOFF",
+        bellfreqSlider
+        );
+
+     bellfreqAttachment = std::make_unique<SliderAttachment>(
+        processorRef.apvts,
+        "BELL1Q",
+        bellqSlider
+        );
+
+     bellfreqAttachment = std::make_unique<SliderAttachment>(
+        processorRef.apvts,
+        "BELL1GAIN",
+        bellGainSlider
+        );
+
+
 
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    setSize (600,400);
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
@@ -46,6 +99,13 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
 
 void AudioPluginAudioProcessorEditor::resized()
 {
-    lowcutoffSlider.setBounds(50,80,100,120);
-    lowqualitySlider.setBounds(200,80,100,120);
+    highcutoffSlider.setBounds(50,180,100,100);
+    highqualitySlider.setBounds(50,20,100,100);
+    lowcutoffSlider.setBounds(450, 180, 100, 100);
+    lowqualitySlider.setBounds(450, 20, 100, 100);
+    bellfreqSlider.setBounds(250, 180,100,100);
+    bellGainSlider.setBounds(250 , 20, 100, 100);
+    bellqSlider.setBounds(250, 300, 100, 100);
+
+
 }

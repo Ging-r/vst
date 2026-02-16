@@ -23,10 +23,19 @@ private:
 
     juce::Slider highcutoffSlider;
     juce::Slider highqualitySlider;
+
+    juce::Slider bellfreqSlider;
+    juce::Slider bellqSlider;
+    juce::Slider bellGainSlider;
     using SliderAttachment = juce::AudioProcessorValueTreeState::SliderAttachment;
 
-    std::unique_ptr<SliderAttachment> cutoffAttachment;
-    std::unique_ptr<SliderAttachment> qualityAttachment;
+    std::unique_ptr<SliderAttachment> lowcutoffAttachment;
+    std::unique_ptr<SliderAttachment> lowqualityAttachment;
+    std::unique_ptr<SliderAttachment> highqualityAttachment;
+    std::unique_ptr<SliderAttachment> highcutoffAttachment;
 
+    std::unique_ptr<SliderAttachment> bellfreqAttachment;
+    std::unique_ptr<SliderAttachment> bellqAttachment;
+    std::unique_ptr<SliderAttachment> bellgainAttachment;
     AudioPluginAudioProcessor& processorRef;
 };

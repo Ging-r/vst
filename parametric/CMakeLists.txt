@@ -41,7 +41,6 @@ set(SourceFiles
         src/plugin/PluginEditor.h
         src/plugin/PluginProcessor.cpp
         src/plugin/PluginProcessor.h
-        src/dsp/LowPassFilter.h
         src/dsp/LowPassFilter.cpp
         src/dsp/Biquad.h
         src/dsp/Biquad.cpp
@@ -102,7 +101,6 @@ add_executable(filter_tests
         src/dsp/BellFilter.cpp
         src/dsp/BellFilter.cpp
         src/dsp/HighPassFilter.cpp
-        src/dsp/Filter.h
         src/dsp/Filter.h
 )
 target_link_libraries(filter_tests
