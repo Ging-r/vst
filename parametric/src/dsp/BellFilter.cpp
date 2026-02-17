@@ -6,15 +6,18 @@
 
 class BellFilter final : public Filter {
     void updateCoefficients() override {
-        const auto A = static_cast<float>(std::sqrt(std::pow(10, (oldDbGain / 40))));
+        const float A = static_cast<float>(std::pow(10, (oldDbGain / 40)));
         const float w0 = 2 * static_cast<float>(M_PI) * oldf0 / fs;
-        const float alpha = std::sin(w0) / (2 * oldQuality);
+        const float sineW0 = std::sinf(w0);
+        const float cosineW0 = std::cos(w0);
+
+        const float alpha = sineW0 / (2 * oldQuality);
 
         const float b0 = 1 + alpha * A;
-        const float b1 = -2 * cos(w0);
+        const float b1 = -2 * cosineW0;
         const float b2 = 1 - alpha * A;
         const float a0 = 1 + alpha / A;
-        const float a1 = -2 * cos(w0);
+        const float a1 = -2 * cosineW0;
         const float a2 = 1 - alpha / A;
         const float a0inv = 1/a0;
 
@@ -24,15 +27,15 @@ class BellFilter final : public Filter {
         dbGain = gain;
         oldDbGain = smoothDb(gain);
     }
-    float smoothDb(float gain){
 
+    float smoothDb(float gain){
+        float y;
         if(std::abs(oldDbGain-gain)<0.01f){
             return gain;
         }else {
-            const float y = oldDbGain + (gain-oldDbGain)/100;
-            oldDbGain = y;
+            y = oldDbGain + (gain-oldDbGain)/100;
         }
-        return oldDbGain;
+        return y;
  
     }
 

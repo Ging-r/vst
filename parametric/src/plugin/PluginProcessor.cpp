@@ -29,7 +29,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
         20000.0f
     ));
 
-    auto lowQRange = juce::NormalisableRange<float>(0.01f, 5.0f, 0.01f);
+    auto lowQRange = juce::NormalisableRange<float>(0.01f, 30.0f, 0.01f);
     lowQRange.setSkewForCentre(0.707f); // Sets 0.707 to be exactly at 12 o'clock
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -46,7 +46,7 @@ layout.add(std::make_unique<juce::AudioParameterFloat>(
         22.0f
     ));
 
-    auto highQRange = juce::NormalisableRange<float>(0.01f, 5.0f, 0.01f);
+    auto highQRange = juce::NormalisableRange<float>(0.01f, 30.0f, 0.01f);
     highQRange.setSkewForCentre(0.707f); // Sets 0.707 to be exactly at 12 o'clock
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -62,7 +62,7 @@ layout.add(std::make_unique<juce::AudioParameterFloat>(
         1000.0f
     ));
 
-    auto qRangeBell = juce::NormalisableRange<float>(0.01f, 5.0f, 0.01f);
+    auto qRangeBell = juce::NormalisableRange<float>(0.01f, 30.0f, 0.01f);
     qRangeBell.setSkewForCentre(0.707f); // Sets 0.707 to be exactly at 12 o'clock
 
     layout.add(std::make_unique<juce::AudioParameterFloat>(
@@ -126,6 +126,13 @@ void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerB
     // initialisation that you need.
     leftLPF.prepare(static_cast<float>(sampleRate));
     rightLPF.prepare(static_cast<float>(sampleRate));
+
+    leftHPF.prepare(static_cast<float>(sampleRate));
+    rightHPF.prepare(static_cast<float>(sampleRate));
+
+
+    leftBellFilter1.prepare(static_cast<float>(sampleRate));
+    rightBellFilter1.prepare(static_cast<float>(sampleRate));
 }
 
 void AudioPluginAudioProcessor::releaseResources() {
@@ -155,18 +162,18 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported(const BusesLayout &layout
     return true;
 #endif
 }
-void AudioPluginAudioProcessor::setLowPassFilter(LowPassFilter filter, float cutoff, float q){
-    filter.setCutoff(cutoff);
-    filter.setResonance(q);
+void AudioPluginAudioProcessor::setLowPassFilter(LowPassFilter *filter, float cutoff, float q){
+    filter->setCutoff(cutoff);
+    filter->setResonance(q);
 }
-void AudioPluginAudioProcessor::setHighPassFilter(HighPassFilter filter, float cutoff, float q){
-    filter.setCutoff(cutoff);
-    filter.setResonance(q);
+void AudioPluginAudioProcessor::setHighPassFilter(HighPassFilter *filter, float cutoff, float q){
+    filter->setCutoff(cutoff);
+    filter->setResonance(q);
 }
-void AudioPluginAudioProcessor::setBellFilter(BellFilter filter, float freq, float q, float gain){
-    filter.setCutoff(freq);
-    filter.setResonance(q);
-    filter.setDbGain(gain);
+void AudioPluginAudioProcessor::setBellFilter(BellFilter *filter, float freq, float q, float gain){
+    filter->setCutoff(freq);
+    filter->setResonance(q);
+    filter->setDbGain(gain);
 }
 
 void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
@@ -181,20 +188,20 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
     float LowNewQ = *apvts.getRawParameterValue("LOWPASSQUALITY");
 
     float HighNewCutoff = *apvts.getRawParameterValue("HIGHPASSCUTOFF");
-    float HighNewQ = *apvts.getRawParameterValue("HIGHPASSCUTOFF");
+    float HighNewQ = *apvts.getRawParameterValue("HIGHPASSQUALITY");
 
     float Bell1NewFreq = *apvts.getRawParameterValue("BELL1CUTOFF");
     float Bell1NewQ = *apvts.getRawParameterValue("BELL1Q");
     float Bell1NewGain = *apvts.getRawParameterValue("BELL1GAIN");
 
-    setLowPassFilter(leftLPF, LowNewCutoff, LowNewQ);
-    setLowPassFilter(rightLPF, LowNewCutoff, LowNewQ);
+    setLowPassFilter(&leftLPF, LowNewCutoff, LowNewQ);
+    setLowPassFilter(&rightLPF, LowNewCutoff, LowNewQ);
 
-    setHighPassFilter(leftHPFilter, HighNewCutoff, HighNewQ);
-    setHighPassFilter(rightHPFilter, HighNewCutoff, HighNewQ);
+    setHighPassFilter(&leftHPF, HighNewCutoff, HighNewQ);
+    setHighPassFilter(&rightHPF, HighNewCutoff, HighNewQ);
 
-    setBellFilter(leftBellFilter1, Bell1NewFreq, Bell1NewQ, Bell1NewGain);
-    setBellFilter(rightBellFilter1, Bell1NewFreq, Bell1NewQ, Bell1NewGain);
+    setBellFilter(&leftBellFilter1, Bell1NewFreq, Bell1NewQ, Bell1NewGain);
+    setBellFilter(&rightBellFilter1, Bell1NewFreq, Bell1NewQ, Bell1NewGain);
 
 
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
@@ -203,10 +210,16 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float> &buffer,
 
     for (int channel = 0; channel < totalNumInputChannels; ++channel) {
         auto *channelData = buffer.getWritePointer(channel);
-        auto &filter = (channel == 0) ? leftLPF : rightLPF;
+        auto &lpf = (channel == 0) ? leftLPF : rightLPF;
+        auto &hpf = (channel == 0) ? leftHPF : rightHPF;
+        auto &bell = (channel == 0) ? leftBellFilter1 : rightBellFilter1;
 
-        for (int i = 0; i < buffer.getNumSamples(); ++i)
-            channelData[i] = filter.process(channelData[i]);
+        for (int i = 0; i < buffer.getNumSamples(); ++i){
+            channelData[i] = lpf.process(channelData[i]);
+            channelData[i] = hpf.process(channelData[i]);
+            channelData[i] = bell.process(channelData[i]);
+        }
+
     }
 }
 

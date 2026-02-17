@@ -67,13 +67,13 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
         bellfreqSlider
         );
 
-     bellfreqAttachment = std::make_unique<SliderAttachment>(
+     bellqAttachment = std::make_unique<SliderAttachment>(
         processorRef.apvts,
         "BELL1Q",
         bellqSlider
         );
 
-     bellfreqAttachment = std::make_unique<SliderAttachment>(
+     bellgainAttachment = std::make_unique<SliderAttachment>(
         processorRef.apvts,
         "BELL1GAIN",
         bellGainSlider

@@ -9,7 +9,6 @@ class LowPassFilter final : public Filter {
         const float sineW0 = std::sinf(w0);
         const float cosineW0 = std::cos(w0);
 
-
         const float alpha = sineW0 / (2 * oldQuality);
 
         const float b0 = (1 - cosineW0) / 2;

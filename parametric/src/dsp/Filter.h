@@ -35,26 +35,26 @@ public:
     }
 
     float smoothQ(float newValue){
+        float y;
         if(std::abs(oldQuality-newValue)<0.01f){
             return newValue;
         }else{
-            const float y = oldQuality + ((newValue-oldQuality))/100;
-            oldQuality = y;
-    }
+            y = oldQuality + ((newValue-oldQuality))/100;
+        }
 
-        return oldQuality;
+        return y;
     }
 
     float smoothC(float newValue){
+        float y;
 
         if(std::abs(oldf0-newValue)<0.01f){
             return newValue;
         }else {
-            const float y = oldf0 + (newValue-oldf0)/100;
-            oldf0 = y;
+            y = oldf0 + (newValue-oldf0)/100;
         }
 
-        return oldf0;
+        return y;
     }
 
     virtual ~Filter() = default;
@@ -65,7 +65,7 @@ protected:
     float f0{};
     float quality{};
 
-    float oldQuality{0.707};
+    float oldQuality{0.707f};
     float oldf0{1000.0f};
 
     Biquad biquad;

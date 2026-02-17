@@ -46,9 +46,9 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
 
-    void setLowPassFilter(LowPassFilter filter, float cutoff, float q);
-    void setHighPassFilter(HighPassFilter filter, float cutoff, float q);
-    void setBellFilter(BellFilter filter, float freq, float q, float gain);
+    void setLowPassFilter(LowPassFilter *filter, float cutoff, float q);
+    void setHighPassFilter(HighPassFilter *filter, float cutoff, float q);
+    void setBellFilter(BellFilter *filter, float freq, float q, float gain);
 
     juce::AudioProcessorValueTreeState apvts;
 private:
@@ -57,8 +57,8 @@ private:
     LowPassFilter leftLPF;
     LowPassFilter rightLPF;
 
-    HighPassFilter leftHPFilter;
-    HighPassFilter rightHPFilter;
+    HighPassFilter leftHPF;
+    HighPassFilter rightHPF;
 
     BellFilter leftBellFilter1;
     BellFilter rightBellFilter1;
